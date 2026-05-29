@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THE CUBISTS · 큐비즘 감상 티켓 & 마그넷</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Archivo+Black&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#ffffff; --ink:#0a0a0a; --muted:#6e6e6e;
+    --line:#dcdcdc; --blue:#1a9bff; --blue-tint:#e9f5ff; --blue-ink:#075fb0;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:'Archivo',sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 28px}
+
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:22px 0 18px;border-bottom:2px dashed var(--ink)}
+  .mark{font-family:'Archivo Black',sans-serif;font-size:17px;letter-spacing:-.02em}
+  .mark span{color:var(--blue)}
+  .topnav{display:flex;gap:22px;font-weight:600;font-size:14px;color:var(--muted)}
+  @media(max-width:620px){.topnav{display:none}}
+
+  .hero{background:var(--blue);margin-top:28px;padding:30px 34px 38px;overflow:hidden}
+  .hero .kick{font-weight:700;font-size:13px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink);opacity:.7}
+  .hero h1{font-family:'Archivo Black',sans-serif;color:var(--ink);font-size:clamp(46px,12vw,128px);line-height:.86;letter-spacing:-.02em;margin:12px 0 0}
+  .hero .tag{font-family:'Archivo Black',sans-serif;font-size:clamp(16px,3vw,26px);letter-spacing:-.01em;margin-top:10px;color:var(--ink)}
+
+  .lead{max-width:62ch;color:var(--ink);font-size:16px;margin:26px 0 0;font-weight:500}
+  .lead b{color:var(--blue-ink)}
+
+  section{margin-top:46px}
+  .step{display:flex;align-items:center;gap:14px;padding-bottom:14px;border-bottom:1px solid var(--line);margin-bottom:22px}
+  .step .no{font-family:'Archivo Black',sans-serif;font-size:14px;background:var(--ink);color:#fff;width:28px;height:28px;display:grid;place-items:center;flex:none}
+  .step h2{font-family:'Archivo Black',sans-serif;font-size:22px;letter-spacing:-.01em}
+  .step .hint{margin-left:auto;font-size:13px;color:var(--muted);font-weight:500}
+
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:12px}
+  .card{position:relative;background:#fff;border:1.5px solid var(--line);padding:16px;cursor:pointer;transition:.15s}
+  .card:hover{border-color:var(--ink)}
+  .card.on{border-color:var(--blue);background:var(--blue-tint)}
+  .card .order{position:absolute;top:10px;right:12px;font-family:'Archivo Black',sans-serif;font-size:13px;color:var(--blue);opacity:0}
+  .card.on .order{opacity:1}
+  .card .name{font-family:'Archivo Black',sans-serif;font-size:19px;letter-spacing:-.01em}
+  .card .cap{color:var(--muted);font-size:12.5px;margin-top:5px;line-height:1.4}
+  .card.dim{opacity:.38;pointer-events:none}
+
+  .chips{display:flex;flex-wrap:wrap;gap:10px}
+  .chip{background:#fff;border:1.5px solid var(--ink);padding:11px 20px;cursor:pointer;transition:.13s;font-family:'Archivo',sans-serif;color:var(--ink);font-size:15px;font-weight:600;line-height:1.2;text-align:left}
+  .chip small{display:block;font-size:11px;color:var(--muted);font-weight:500;margin-top:2px}
+  .chip:hover{background:#f4f4f4}
+  .chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .chip.on small{color:rgba(255,255,255,.7)}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+  @media(max-width:760px){.grid2{grid-template-columns:1fr;gap:40px}}
+  .maker-head{font-family:'Archivo Black',sans-serif;font-size:15px;letter-spacing:.02em;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+  .maker-head .dot{width:9px;height:9px;background:var(--blue)}
+  .preview{min-height:120px;display:flex;justify-content:center;align-items:flex-start}
+  .ph{width:100%;border:1.5px dashed var(--line);padding:40px 16px;text-align:center;color:var(--muted);font-size:13px;font-weight:500}
+
+  .ctl{display:flex;gap:10px;margin-top:18px}
+  .btn{font-family:'Archivo Black',sans-serif;font-size:14px;padding:13px 22px;border:1.5px solid var(--ink);cursor:pointer;transition:.14s;background:#fff;color:var(--ink)}
+  .btn-go{background:var(--ink);color:#fff}
+  .btn-go:hover:not(:disabled){background:var(--blue);border-color:var(--blue);color:var(--ink)}
+  .btn:disabled{background:#eee;border-color:#ddd;color:#aaa;cursor:not-allowed}
+  .btn-ghost:hover:not(:disabled){background:#f4f4f4}
+  .status{font-size:13px;color:var(--muted);min-height:22px;margin-top:12px;font-weight:500}
+  .status .err{color:#d33}
+  .loading{display:inline-flex;align-items:center;gap:9px;color:var(--ink);font-family:'Archivo Black',sans-serif;font-size:13px}
+  .spin{width:15px;height:15px;border:2.5px solid var(--line);border-top-color:var(--blue);border-radius:50%;animation:sp .7s linear infinite}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  .dlbtn{margin-top:14px;width:100%;display:none}
+  .dlbtn.show{display:block}
+
+  /* ---- 포토티켓 ---- */
+  .ticket-frame{background:#fff;border:1.5px solid var(--ink);padding:13px 13px 0;width:290px;max-width:100%}
+  .ticket-frame img{width:100%;display:block}
+  .ticket-meta{padding:14px 3px 16px}
+  .tt-top{display:flex;justify-content:space-between;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  .tt-artist{font-family:'Archivo Black',sans-serif;font-size:22px;margin:7px 0 1px;letter-spacing:-.01em}
+  .tt-style{font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:600}
+  .tt-tags{display:flex;flex-wrap:wrap;gap:5px}
+  .tt-tags span{font-size:11px;background:var(--blue-tint);color:var(--blue-ink);padding:3px 10px;font-weight:600}
+  .tt-perf{border-top:1.5px dashed var(--line);margin-top:13px;padding-top:8px;display:flex;justify-content:space-between;font-size:9px;color:var(--muted);letter-spacing:.1em;font-weight:600}
+
+  /* ---- 기념 마그넷 (아치형 + 영문 표기 + 영문 필기체 날짜) ---- */
+  .magnet{width:250px;max-width:100%;position:relative;padding-top:6px}
+  .badge{position:relative;background:#fff;border-radius:135px 135px 18px 18px;padding:13px 13px 20px;
+    box-shadow:0 14px 28px rgba(0,0,0,.22), inset 0 2px 0 rgba(255,255,255,.9);border:1px solid #eee}
+  .badge::after{content:"";position:absolute;inset:0;border-radius:135px 135px 18px 18px;pointer-events:none;
+    background:radial-gradient(120px 120px at 32% 14%, rgba(255,255,255,.55), transparent 60%)}
+  .badge-img{border-radius:122px 122px 8px 8px;overflow:hidden;aspect-ratio:1/1;background:var(--blue-tint)}
+  .badge-img img{width:100%;height:100%;object-fit:cover;display:block}
+  .badge-date{font-family:'Dancing Script',cursive;font-weight:700;font-size:33px;line-height:1.05;text-align:center;margin-top:14px;color:var(--ink)}
+  .badge-name{font-family:'Archivo Black',sans-serif;font-size:15px;text-align:center;margin-top:2px;letter-spacing:.02em;text-transform:uppercase}
+  .badge-theme{text-align:center;font-size:10px;color:var(--muted);font-weight:700;margin-top:4px;letter-spacing:.16em;text-transform:uppercase}
+  .magnet-clip{position:absolute;top:-2px;left:50%;transform:translateX(-50%);width:22px;height:30px;
+    background:linear-gradient(#d0d0d0,#a8a8a8);border-radius:4px 4px 0 0;box-shadow:0 2px 3px rgba(0,0,0,.2);z-index:2}
+
+  footer{margin-top:72px;border-top:2px dashed var(--ink);padding:18px 0 60px;color:var(--muted);font-size:12px;line-height:1.7}
+  footer b{color:var(--ink);font-weight:700}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <div class="mark">CUBISM <span>DOCENT</span></div>
+    <div class="topnav"><span>Exhibition</span><span>My Ticket</span><span>About</span></div>
+  </div>
+
+  <div class="hero">
+    <div class="kick">예정 전시 · Scheduled</div>
+    <h1>THE CUBISTS</h1>
+    <div class="tag">Inventing Modern Vision</div>
+  </div>
+
+  <p class="lead">오늘 느낀 감정과 가장 기억에 남는 작가를 고르면, 그 둘을 결합해 <b>새로 그린 추상 이미지</b>로 포토티켓과 기념 마그넷을 만들어 드립니다.</p>
+
+  <section>
+    <div class="step"><span class="no">1</span><h2>오늘의 감정</h2><span class="hint">최대 3개 · 고른 순서가 강조됩니다</span></div>
+    <div class="cards" id="cards"></div>
+  </section>
+
+  <section>
+    <div class="step"><span class="no">2</span><h2>기억에 남는 작가</h2><span class="hint">1명 선택</span></div>
+    <div class="chips" id="chips"></div>
+  </section>
+
+  <section>
+    <div class="step"><span class="no">3</span><h2>티켓 & 기념 마그넷</h2><span class="hint">감정·작가 선택 후 각각 생성</span></div>
+    <div class="grid2">
+
+      <!-- 포토티켓 -->
+      <div class="maker">
+        <div class="maker-head"><span class="dot"></span>포토티켓</div>
+        <div class="preview">
+          <div class="ph" id="phT">감정과 작가를 고른 뒤 생성하세요.</div>
+          <div class="ticket-frame" id="frameT" style="display:none">
+            <img id="imgT" alt="생성된 큐비즘 추상 이미지">
+            <div class="ticket-meta">
+              <div class="tt-top"><span>MY MUSEUM DAY</span><span id="tDate"></span></div>
+              <div class="tt-artist" id="tArtist"></div>
+              <div class="tt-style" id="tStyle"></div>
+              <div class="tt-tags" id="tTags"></div>
+              <div class="tt-perf"><span>THE CUBISTS</span><span id="tSeed"></span></div>
+            </div>
+          </div>
+        </div>
+        <div class="ctl">
+          <button class="btn btn-go" id="goT" disabled>이미지 생성</button>
+          <button class="btn btn-ghost" id="reT" disabled>다시 그리기</button>
+        </div>
+        <div class="status" id="stT"></div>
+        <button class="btn btn-ghost dlbtn" id="dlT">포토티켓 PNG 저장</button>
+      </div>
+
+      <!-- 기념 마그넷 -->
+      <div class="maker">
+        <div class="maker-head"><span class="dot"></span>기념 마그넷</div>
+        <div class="preview">
+          <div class="ph" id="phM">감정과 작가를 고른 뒤 생성하세요.</div>
+          <div class="magnet" id="frameM" style="display:none">
+            <div class="magnet-clip"></div>
+            <div class="badge">
+              <div class="badge-img"><img id="imgM" alt="생성된 큐비즘 엠블럼"></div>
+              <div class="badge-date" id="mDate"></div>
+              <div class="badge-name" id="mName"></div>
+              <div class="badge-theme" id="mTheme"></div>
+            </div>
+          </div>
+        </div>
+        <div class="ctl">
+          <button class="btn btn-go" id="goM" disabled>마그넷 생성</button>
+          <button class="btn btn-ghost" id="reM" disabled>다시 만들기</button>
+        </div>
+        <div class="status" id="stM"></div>
+        <button class="btn btn-ghost dlbtn" id="dlM">마그넷 PNG 저장</button>
+      </div>
+
+    </div>
+  </section>
+
+  <footer>
+    이미지 생성: Pollinations.AI (Flux) · 키 없이 무료.<br>
+    <b>저작권 안전 설계</b> — 작가 이름은 화면·티켓 표시용으로만 쓰이며, 이미지 생성 요청에는 작가 실명을 넣지 않고 사조·기법 묘사만 사용합니다. 실제 작품 사진이나 기존 회화의 복제가 나오지 않도록 설계되어 있습니다.
+  </footer>
+</div>
+
+<script>
+const DATA = {
+  emotions: [
+    {id:"confusion",label:"혼란",caption:"시점이 무너지며 어지러운",kw:"fractured multiple viewpoints, dizzying overlapping planes, unstable disorienting composition"},
+    {id:"contemplation",label:"사색",caption:"차분히 뜯어보게 되는 고요",kw:"muted ochre and grey palette, soft faceted planes, calm meditative restrained tone"},
+    {id:"tension",label:"긴장",caption:"날카로운 각이 주는 불안",kw:"sharp angular shards, jagged intersecting planes, high contrast, taut nervous energy"},
+    {id:"dynamism",label:"역동",caption:"회전하며 솟구치는 에너지",kw:"swirling circular rhythms, sense of motion and rotation, dynamic diagonal thrust"},
+    {id:"wonder",label:"경이",caption:"세상을 새로 보는 놀라움",kw:"expansive luminous composition, radiant prismatic light, airy open planes, sense of revelation"},
+    {id:"strangeness",label:"낯섦",caption:"익숙한 것이 기이해지는",kw:"familiar objects rendered strange, dreamlike recombination, ambiguous mask-like forms"},
+    {id:"playfulness",label:"경쾌",caption:"콜라주의 위트와 리듬",kw:"playful papier-colle collage, fragmented lettering, syncopated rhythm, bright witty accents"},
+    {id:"solidity",label:"견고",caption:"기하학적 안정과 무게감",kw:"solid interlocking geometric blocks, architectural stability, grounded balanced weighty forms"},
+    {id:"melancholy",label:"우수",caption:"단색조의 쓸쓸함",kw:"somber monochrome browns and greys, sparse melancholic mood, faded muted tones, quiet solitude"},
+    {id:"urban_vitality",label:"도시적 활기",caption:"기계 시대의 분주함",kw:"bustling machine-age forms, bold industrial shapes, energetic urban rhythm, vivid primary accents"}
+  ],
+  artists: [
+    {id:"picasso",display:"파블로 피카소",en:"Pablo Picasso",style:"분석·종합 큐비즘",styleEn:"Analytic & Synthetic Cubism",base:"in the manner of early analytic and synthetic Cubism, boldly fragmented angular figures, faceted overlapping planes, simplified mask-like faces, daring deconstruction of form"},
+    {id:"braque",display:"조르주 브라크",en:"Georges Braque",style:"분석적 큐비즘 정물",styleEn:"Analytic Cubism",base:"in the manner of analytic Cubism still life, harmonious muted browns greens and greys, delicately faceted overlapping planes, fragmented musical instruments, subtle trompe-l'oeil"},
+    {id:"gris",display:"후안 그리스",en:"Juan Gris",style:"종합적 큐비즘",styleEn:"Synthetic Cubism",base:"in the manner of synthetic Cubism, clear ordered geometry, crisp clean planes, balanced bright colour, precise architectural structure"},
+    {id:"delaunay",display:"로베르 들로네",en:"Robert Delaunay",style:"오르피즘",styleEn:"Orphism",base:"in the manner of Orphic Cubism, vivid prismatic concentric circles, simultaneous colour contrast, radiant light and movement"},
+    {id:"gleizes",display:"알베르 글레이즈",en:"Albert Gleizes",style:"리듬적 큐비즘",styleEn:"Rhythmic Cubism",base:"in the manner of rhythmic Cubism, interlocking flat geometric planes, rhythmic abstract structure, restrained earthy palette"},
+    {id:"leger",display:"페르낭 레제",en:"Fernand Léger",style:"튜비즘",styleEn:"Tubism",base:"in the manner of Tubist Cubism, bold cylindrical and tubular forms, machine-like shapes, strong black outlines, bright primary colours"}
+  ],
+  ticketTail: "vertical poster composition with clean margins for a photo ticket, original abstract cubism-inspired digital illustration, flat painterly geometric shapes, invented imaginary composition, not a photograph, not a photo, not a reproduction of any existing artwork, no recognizable real painting, no text, no signature, no frame, high quality",
+  magnetTail: "simple flat minimal cubism-inspired emblem icon, single bold centered geometric motif, clean vector sticker badge style, limited colour palette, smooth plain light background, original abstract design, not a photograph, not a reproduction of any existing artwork, no text, no lettering, no signature, high quality"
+};
+const MAX = 3, TW = 768, TH = 1152, MS = 768;
+let selEmotions = [], selArtist = null;
+let blobT = null, seedT = null, blobM = null, seedM = null;
+const $ = id => document.getElementById(id);
+
+const cardsEl = $('cards');
+DATA.emotions.forEach(e=>{
+  const d=document.createElement('div'); d.className='card'; d.dataset.id=e.id;
+  d.innerHTML=`<span class="order"></span><div class="name">${e.label}</div><div class="cap">${e.caption}</div>`;
+  d.onclick=()=>toggleEmotion(e.id); cardsEl.appendChild(d);
+});
+const chipsEl = $('chips');
+DATA.artists.forEach(a=>{
+  const b=document.createElement('button'); b.className='chip'; b.dataset.id=a.id;
+  b.innerHTML=`${a.display}<small>${a.style}</small>`;
+  b.onclick=()=>selectArtist(a.id); chipsEl.appendChild(b);
+});
+
+function toggleEmotion(id){
+  const i=selEmotions.indexOf(id);
+  if(i>=0) selEmotions.splice(i,1);
+  else { if(selEmotions.length>=MAX) return; selEmotions.push(id); }
+  document.querySelectorAll('.card').forEach(c=>{
+    const pos=selEmotions.indexOf(c.dataset.id);
+    c.classList.toggle('on', pos>=0);
+    c.querySelector('.order').textContent = pos>=0 ? (pos+1) : '';
+    c.classList.toggle('dim', selEmotions.length>=MAX && pos<0);
+  });
+  refresh();
+}
+function selectArtist(id){
+  selArtist = (selArtist===id) ? null : id;
+  document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on', c.dataset.id===selArtist));
+  refresh();
+}
+function ready(){ return selArtist && selEmotions.length>0; }
+function refresh(){ const r=ready(); $('goT').disabled=!r; $('goM').disabled=!r; }
+
+function ticketPrompt(){
+  const a=DATA.artists.find(x=>x.id===selArtist);
+  const emo=selEmotions.map(id=>DATA.emotions.find(e=>e.id===id).kw).join(', ');
+  return `${a.base}, ${emo}, ${DATA.ticketTail}`;
+}
+function magnetPrompt(){
+  const a=DATA.artists.find(x=>x.id===selArtist);
+  const primary=DATA.emotions.find(e=>e.id===selEmotions[0]).kw;
+  return `${a.base}, ${primary}, ${DATA.magnetTail}`;
+}
+async function fetchImage(url){
+  const res = await fetch(url);
+  if(!res.ok) throw new Error('HTTP '+res.status);
+  return URL.createObjectURL(await res.blob());
+}
+
+// ---- 포토티켓 ----
+$('goT').onclick = $('reT').onclick = genTicket;
+async function genTicket(){
+  if(!ready()) return;
+  seedT = Math.floor(Math.random()*1e6);
+  const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(ticketPrompt())}?width=${TW}&height=${TH}&model=flux&nologo=true&seed=${seedT}`;
+  $('goT').disabled=true; $('reT').disabled=true; $('dlT').classList.remove('show');
+  $('stT').innerHTML='<span class="loading"><span class="spin"></span>그리는 중… (10~25초)</span>';
+  try{
+    if(blobT) URL.revokeObjectURL(blobT);
+    blobT = await fetchImage(url);
+    const img=$('imgT');
+    img.onload=()=>{
+      $('phT').style.display='none'; $('frameT').style.display='block';
+      const a=DATA.artists.find(x=>x.id===selArtist);
+      $('tArtist').textContent=a.display; $('tStyle').textContent=a.style;
+      $('tDate').textContent=new Date().toLocaleDateString('ko-KR');
+      $('tSeed').textContent='NO.'+String(seedT).padStart(6,'0');
+      $('tTags').innerHTML=selEmotions.map(id=>`<span>#${DATA.emotions.find(e=>e.id===id).label}</span>`).join('');
+      $('stT').textContent='완성! 아래 버튼으로 저장하세요.'; $('dlT').classList.add('show');
+      $('goT').disabled=false; $('reT').disabled=false;
+    };
+    img.src=blobT;
+  }catch(e){
+    $('stT').innerHTML='<span class="err">생성 실패. 15초 뒤 다시 시도하세요.</span>';
+    $('goT').disabled=false; $('reT').disabled=false;
+  }
+}
+
+// ---- 마그넷 ----
+$('goM').onclick = $('reM').onclick = genMagnet;
+async function genMagnet(){
+  if(!ready()) return;
+  seedM = Math.floor(Math.random()*1e6);
+  const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(magnetPrompt())}?width=${MS}&height=${MS}&model=flux&nologo=true&seed=${seedM}`;
+  $('goM').disabled=true; $('reM').disabled=true; $('dlM').classList.remove('show');
+  $('stM').innerHTML='<span class="loading"><span class="spin"></span>마그넷 굽는 중… (10~25초)</span>';
+  try{
+    if(blobM) URL.revokeObjectURL(blobM);
+    blobM = await fetchImage(url);
+    const img=$('imgM');
+    img.onload=()=>{
+      $('phM').style.display='none'; $('frameM').style.display='block';
+      const a=DATA.artists.find(x=>x.id===selArtist);
+      const d=new Date();
+      $('mDate').textContent=d.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+      $('mName').textContent=a.en;
+      $('mTheme').textContent=`THE CUBISTS · ${a.styleEn}`;
+      $('stM').textContent='완성! 아래 버튼으로 저장하세요.'; $('dlM').classList.add('show');
+      $('goM').disabled=false; $('reM').disabled=false;
+    };
+    img.src=blobM;
+  }catch(e){
+    $('stM').innerHTML='<span class="err">생성 실패. 15초 뒤 다시 시도하세요.</span>';
+    $('goM').disabled=false; $('reM').disabled=false;
+  }
+}
+
+// ---- 다운로드: 포토티켓 ----
+$('dlT').onclick=()=>{
+  const img=$('imgT'); const pad=44, w=TW, h=TH, meta=330;
+  const cv=document.createElement('canvas'); cv.width=w+pad*2; cv.height=h+pad+meta;
+  const ctx=cv.getContext('2d');
+  ctx.fillStyle='#fff'; ctx.fillRect(0,0,cv.width,cv.height);
+  ctx.strokeStyle='#0a0a0a'; ctx.lineWidth=3; ctx.strokeRect(6,6,cv.width-12,cv.height-12);
+  ctx.drawImage(img,pad,pad,w,h);
+  const y=pad+h+54; const a=DATA.artists.find(x=>x.id===selArtist);
+  ctx.fillStyle='#6e6e6e'; ctx.font='600 22px Archivo'; ctx.fillText('MY MUSEUM DAY',pad,y);
+  ctx.textAlign='right'; ctx.fillText(new Date().toLocaleDateString('ko-KR'),cv.width-pad,y); ctx.textAlign='left';
+  ctx.fillStyle='#0a0a0a'; ctx.font='900 54px "Archivo Black", Archivo'; ctx.fillText(a.display,pad,y+62);
+  ctx.fillStyle='#6e6e6e'; ctx.font='600 24px Archivo'; ctx.fillText(a.style,pad,y+96);
+  ctx.font='600 26px Archivo'; let tx=pad; const ty=y+148;
+  selEmotions.forEach(id=>{ const t='#'+DATA.emotions.find(e=>e.id===id).label; const ww=ctx.measureText(t).width+34;
+    ctx.fillStyle='#e9f5ff'; ctx.fillRect(tx,ty-30,ww,42); ctx.fillStyle='#075fb0'; ctx.fillText(t,tx+17,ty); tx+=ww+12; });
+  ctx.strokeStyle='#cdcdcd'; ctx.lineWidth=2; ctx.setLineDash([7,7]); ctx.beginPath(); ctx.moveTo(pad,y+182); ctx.lineTo(cv.width-pad,y+182); ctx.stroke(); ctx.setLineDash([]);
+  ctx.fillStyle='#9a9a9a'; ctx.font='600 20px Archivo'; ctx.fillText('THE CUBISTS',pad,y+214);
+  ctx.textAlign='right'; ctx.fillText('NO.'+String(seedT).padStart(6,'0'),cv.width-pad,y+214); ctx.textAlign='left';
+  cv.toBlob(b=>{ const a2=document.createElement('a'); a2.href=URL.createObjectURL(b); a2.download=`cubism_ticket_${seedT}.png`; a2.click(); },'image/png');
+};
+
+// ---- 다운로드: 마그넷 (아치형, 영문 표기, 영문 필기체 날짜, 중앙 리본 없음) ----
+$('dlM').onclick=()=>{
+  const img=$('imgM');
+  const W=760, imgBox=620, topR=300, x0=(W-imgBox)/2, yImg=40;
+  const H=yImg+imgBox+240;
+  const cv=document.createElement('canvas'); cv.width=W; cv.height=H;
+  const ctx=cv.getContext('2d');
+  function archPath(x,y,w,h,tr,br){
+    ctx.beginPath();
+    ctx.moveTo(x, y+tr); ctx.arcTo(x, y, x+tr, y, tr);
+    ctx.lineTo(x+w-tr, y); ctx.arcTo(x+w, y, x+w, y+tr, tr);
+    ctx.lineTo(x+w, y+h-br); ctx.arcTo(x+w, y+h, x+w-br, y+h, br);
+    ctx.lineTo(x+br, y+h); ctx.arcTo(x, y+h, x, y+h-br, br); ctx.closePath();
+  }
+  const bx=20, by=14, bw=W-40, bh=H-28;
+  ctx.save(); ctx.shadowColor='rgba(0,0,0,.25)'; ctx.shadowBlur=26; ctx.shadowOffsetY=14;
+  archPath(bx,by,bw,bh,topR,22); ctx.fillStyle='#ffffff'; ctx.fill(); ctx.restore();
+  ctx.save(); archPath(x0,yImg,imgBox,imgBox,topR-26,10); ctx.clip();
+  ctx.drawImage(img,x0,yImg,imgBox,imgBox); ctx.restore();
+  const d=new Date(); const a=DATA.artists.find(x=>x.id===selArtist);
+  const ty=yImg+imgBox+70;
+  ctx.textAlign='center';
+  ctx.fillStyle='#0a0a0a'; ctx.font='700 70px "Dancing Script", cursive';
+  ctx.fillText(d.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}), W/2, ty);
+  ctx.fillStyle='#0a0a0a'; ctx.font='900 34px "Archivo Black", Archivo';
+  ctx.fillText(a.en.toUpperCase(), W/2, ty+52);
+  ctx.fillStyle='#6e6e6e'; ctx.font='700 20px Archivo';
+  ctx.fillText(`THE CUBISTS · ${a.styleEn.toUpperCase()}`, W/2, ty+86);
+  ctx.textAlign='left';
+  cv.toBlob(b=>{ const a2=document.createElement('a'); a2.href=URL.createObjectURL(b); a2.download=`cubism_magnet_${seedM}.png`; a2.click(); },'image/png');
+};
+</script>
+</body>
+</html>
